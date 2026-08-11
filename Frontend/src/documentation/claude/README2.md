@@ -89,7 +89,7 @@ export default function App() {
 
 Lembre de atualizar `MAPA_PAGINAS` em `pages/Login.jsx` para incluir a rota
 da secretaria (ex: `'secretaria/secretaria.html': '/secretaria'`), conforme
-o valor real que o backend retorna no campo `page`.
+o valor real que o backend retorna no campo `page`
 
 ## O que mudou de arquitetura (Blade/DOM → React)
 

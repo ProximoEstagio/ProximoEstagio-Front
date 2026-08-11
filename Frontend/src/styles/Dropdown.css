@@ -1,0 +1,49 @@
+/**
+ * components/Dropdown.css
+ * Estilos portados do Shadow DOM de dropdown.js (:host -> .custom-dropdown).
+ * Ajuste as variáveis (--cor-border, --cinza-claro) para as que já existem
+ * no seu global.css.
+ */
+.custom-dropdown {
+  display: block;
+  position: relative;
+  width: 100%;
+  font-family: 'FontePadrao';
+  font-size: 14px;
+}
+
+.custom-dropdown .selected-label {
+  display: block;
+  padding: 8px;
+  border: 1px solid var(--cor-border);
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  background-color: white;
+}
+
+.custom-dropdown .selected-label span {
+  color: var(--cinza-claro);
+}
+
+.custom-dropdown .options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 2px;
+  z-index: 10;
+}
+
+.custom-dropdown .options label {
+  display: block;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.custom-dropdown .options label:hover {
+  background-color: #eee;
+}

@@ -1,20 +1,22 @@
 /**
  * components/NavSecretaria.jsx
- * Substitui scripts/nav.js da secretaria — mesma estrutura da Nav do aluno,
- * mas sem sino/link de perfil/foto (a secretaria não tem essas telas) e com
- * botão de logout visível direto na barra (ícone, sem texto).
+ * Substitui scripts/nav.js da secretaria.
  *
  * Reaproveita:
- *  - MODOS_ACESSIBILIDADE de constants/acessibilidade.js
- *  - useLogout() de hooks/useLogout.js (mesmo usado em pages/aluno/Perfil.jsx)
+ *  - hooks/useMenuMobile.js  (hamburguer mobile — era script.js)
+ *  - hooks/useTema.js        (alternador claro/escuro — era acessibilidade.js)
+ *  - components/AcessibilidadeMenu.jsx (submenu de acessibilidade)
+ *  - hooks/useLogout.js      (mesmo usado em pages/aluno/Perfil.jsx)
  */
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
-import { MODOS_ACESSIBILIDADE } from '../constants/acessibilidade';
+import { useMenuMobile } from '../hooks/useMenuMobile';
+import { useTema } from '../hooks/useTema';
+import AcessibilidadeMenu from './AcessibilidadeMenu';
 import { useLogout } from '../hooks/useLogout';
 
 export default function NavSecretaria() {
-  const [menuAcessAberto, setMenuAcessAberto] = useState(false);
+  const { menuAberto, menuRef, toggleMenu, fecharMenu } = useMenuMobile();
+  const { alternarTema } = useTema();
   const logout = useLogout();
 
   const nome = localStorage.getItem('nomeUser') || '';
@@ -24,42 +26,25 @@ export default function NavSecretaria() {
     <div className="nav cl">
       <div className="nav-content rw">
         <div className="nav-options rw">
-          <span id="hamburguer" className="icon-nav hamburguer"></span>
+          <span id="hamburguer" className="icon-nav hamburguer" onClick={toggleMenu}></span>
 
-          <div id="nav-left" className="nav-left rw">
+          <div id="nav-left" ref={menuRef} className={`nav-left rw${menuAberto ? ' visible' : ''}`}>
             <img src="/imagens/logo.png" alt="logo" className="nav-logo" />
 
             <div className="nav-options rw">
-              <Link to="/secretaria">
+              <Link to="/secretaria" onClick={fecharMenu}>
                 <span className="icon-nav users"></span>
               </Link>
-              <a id="alternador" style={{ cursor: 'pointer' }}>
+              <a id="alternador" onClick={alternarTema} style={{ cursor: 'pointer' }}>
                 <span className="icon-nav moon"></span>
               </a>
 
-              <div style={{ position: 'relative' }}>
-                <span
-                  id="btn-acessibilidade"
-                  className="icon-nav acessibilidade"
-                  title="Acessibilidade"
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => setMenuAcessAberto((v) => !v)}
-                ></span>
-                {menuAcessAberto && (
-                  <div className="menu-acess">
-                    {MODOS_ACESSIBILIDADE.map((modo) => (
-                      <button key={modo.valor} data-modo={modo.valor}>
-                        {modo.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <AcessibilidadeMenu />
             </div>
           </div>
         </div>
 
-        <div className="rw g16 fc">
+        <div className={`rw g16 fc${menuAberto ? ' invisible' : ''}`}>
           <div className="nav-perfil rw">
             <div id="perfil-info" className="cl">
               <p id="nome" className="name">{nome}</p>

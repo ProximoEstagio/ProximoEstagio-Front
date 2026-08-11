@@ -2,10 +2,24 @@
  * services/api.js
  * Substitui o antigo public/script/api.js + config.js.
  *
- * Define VITE_API_BASE_URL no seu .env, ex:
- *   VITE_API_BASE_URL=http://localhost:8000/api
+ * Prioridade pra definir a URL base:
+ *   1. VITE_API_BASE_URL no seu .env (recomendado — explícito por ambiente)
+ *   2. Auto-detecção local/produção, igual ao config.js original: se estiver
+ *      rodando em localhost/127.0.0.1, usa a própria origem + /api; senão,
+ *      cai no domínio de produção abaixo (ajuste PRODUCTION_DOMAIN).
  */
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
+const PRODUCTION_DOMAIN = 'https://seu-dominio.com';
+
+function detectarBaseUrl() {
+  if (import.meta.env.VITE_API_BASE_URL) return import.meta.env.VITE_API_BASE_URL;
+
+  const hostnamesLocais = ['localhost', '127.0.0.1', 'nextstage.local'];
+  const isLocal = hostnamesLocais.includes(window.location.hostname);
+
+  return isLocal ? `${window.location.origin}/api` : `${PRODUCTION_DOMAIN}/api`;
+}
+
+const BASE_URL = detectarBaseUrl();
 
 // URL base "sem /api", usada para montar links de storage/back-end (fotos, docs)
 export const BASE_URL_STATIC = BASE_URL.replace(/\/api\/?$/, '');

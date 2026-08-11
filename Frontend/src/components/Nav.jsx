@@ -2,22 +2,22 @@
  * components/Nav.jsx
  * Substitui scripts/nav.js — antes injetava HTML via innerHTML, agora é componente.
  *
- * Ajuste os imports de imagens/ícones para o caminho real dos seus assets.
- *
- * TODO (lógica ainda não portada, arquivos originais não enviados):
- *  - #hamburguer (menu mobile) -> provavelmente em script.js
- *  - #alternador (tema claro/escuro) -> script.js
- *  - modo de acessibilidade (aplicar classe no <body>) -> acessibilidade.js
+ * Integra:
+ *  - hooks/useMenuMobile.js  -> hamburguer mobile (era script.js)
+ *  - hooks/useTema.js        -> alternador claro/escuro (era parte de acessibilidade.js)
+ *  - components/AcessibilidadeMenu.jsx -> submenu de acessibilidade (era parte de acessibilidade.js)
  */
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
 import { useDocumentos } from '../context/DocumentosContext';
 import { BASE_URL_STATIC } from '../services/api';
-import { MODOS_ACESSIBILIDADE } from '../constants/acessibilidade';
+import { useMenuMobile } from '../hooks/useMenuMobile';
+import { useTema } from '../hooks/useTema';
+import AcessibilidadeMenu from './AcessibilidadeMenu';
 
 export default function Nav({ onAbrirInfo }) {
   const { notificacoes, abrirPrazosPopup } = useDocumentos();
-  const [menuAcessAberto, setMenuAcessAberto] = useState(false);
+  const { menuAberto, menuRef, toggleMenu, fecharMenu } = useMenuMobile();
+  const { alternarTema } = useTema();
 
   const nome = localStorage.getItem('nomeUser') || '';
   const email = localStorage.getItem('emailUser') || '';
@@ -30,43 +30,32 @@ export default function Nav({ onAbrirInfo }) {
     <div className="nav cl">
       <div className="nav-content rw">
         <div className="nav-options rw">
-          <span id="hamburguer" className="icon-nav hamburguer"></span>
+          <span id="hamburguer" className="icon-nav hamburguer" onClick={toggleMenu}></span>
 
-          <div id="nav-left" className="nav-left rw">
+          <div id="nav-left" ref={menuRef} className={`nav-left rw${menuAberto ? ' visible' : ''}`}>
             <img src="/imagens/logo.png" alt="logo" className="nav-logo" />
 
             <div className="nav-options rw">
-              <Link to="/aluno">
+              <Link to="/aluno" onClick={fecharMenu}>
                 <span className="icon-nav home"></span>
               </Link>
-              <Link to="/aluno/enviados">
+              <Link to="/aluno/enviados" onClick={fecharMenu}>
                 <span className="icon-nav file-text"></span>
               </Link>
-              <a onClick={onAbrirInfo} style={{ cursor: 'pointer' }}>
+              <a
+                onClick={() => {
+                  onAbrirInfo();
+                  fecharMenu();
+                }}
+                style={{ cursor: 'pointer' }}
+              >
                 <span className="icon-nav question"></span>
               </a>
-              <a id="alternador" style={{ cursor: 'pointer' }}>
+              <a id="alternador" onClick={alternarTema} style={{ cursor: 'pointer' }}>
                 <span className="icon-nav moon"></span>
               </a>
 
-              <div style={{ position: 'relative' }}>
-                <span
-                  id="btn-acessibilidade"
-                  className="icon-nav acessibilidade"
-                  title="Acessibilidade"
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => setMenuAcessAberto((v) => !v)}
-                ></span>
-                {menuAcessAberto && (
-                  <div className="menu-acess">
-                    {MODOS_ACESSIBILIDADE.map((modo) => (
-                      <button key={modo.valor} data-modo={modo.valor}>
-                        {modo.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <AcessibilidadeMenu />
 
               <a
                 id="sino-notificacoes"
@@ -103,7 +92,7 @@ export default function Nav({ onAbrirInfo }) {
           </div>
         </div>
 
-        <div className="rw g16 fc">
+        <div className={`rw g16 fc${menuAberto ? ' invisible' : ''}`}>
           <Link id="perfil" to="/aluno/perfil">
             <div className="nav-perfil rw">
               <div id="perfil-info" className="cl">

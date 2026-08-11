@@ -21,7 +21,7 @@ import { Api } from '../services/api';
 const MAPA_PAGINAS = {
   'aluno/area_aluno.jsx': '/aluno',
   'professor/alunos.jsx': '/alunos',
-  'secretaria/secretaria.jsx':'/secretaria',
+  'secretaria/AlunosConcluidos.jsx':'/secretaria',
 };
 
 export default function Login() {
