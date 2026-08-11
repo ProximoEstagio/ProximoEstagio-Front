@@ -13,14 +13,7 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useDocumentos } from '../context/DocumentosContext';
 import { BASE_URL_STATIC } from '../services/api';
-
-const MODOS_ACESSIBILIDADE = [
-  { valor: 'normal', label: 'Normal' },
-  { valor: 'deuteranopia', label: 'Deuteranopia' },
-  { valor: 'protanopia', label: 'Protanopia' },
-  { valor: 'tritanopia', label: 'Tritanopia' },
-  { valor: 'alto-contraste', label: 'Alto Contraste' },
-];
+import { MODOS_ACESSIBILIDADE } from '../constants/acessibilidade';
 
 export default function Nav({ onAbrirInfo }) {
   const { notificacoes, abrirPrazosPopup } = useDocumentos();
