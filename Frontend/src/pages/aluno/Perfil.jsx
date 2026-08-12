@@ -9,7 +9,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Api, BASE_URL_STATIC } from '../../services/api';
-import '../styles/aluno/perfil.css'
+import '../../styles/aluno/perfil.css'
 
 export default function Perfil() {
   const navigate = useNavigate();

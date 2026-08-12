@@ -13,6 +13,15 @@ import { BASE_URL_STATIC } from '../services/api';
 import { useMenuMobile } from '../hooks/useMenuMobile';
 import { useTema } from '../hooks/useTema';
 import AcessibilidadeMenu from './AcessibilidadeMenu';
+import logo from "../assets/imagens/logo.png";
+import fotoPerfil from "../assets/imagens/ft-perfil.png";
+import sino from "../assets/icons/sino.png";
+import home from "../assets/icons/home.svg";
+import moon from "../assets/icons/moon.svg";
+import hamburguer from "../assets/icons/hamburguer.svg";
+import filetext from "../assets/icons/file-text.svg";
+import question from "../assets/icons/question.svg";
+import student from "../assets/icons/student.svg";
 
 export default function Nav({ onAbrirInfo }) {
   const { notificacoes, abrirPrazosPopup } = useDocumentos();
@@ -24,35 +33,35 @@ export default function Nav({ onAbrirInfo }) {
   const foto = localStorage.getItem('foto');
   const fotoSrc = foto
     ? `${BASE_URL_STATIC}/back-end/${foto}?t=${Date.now()}`
-    : '/imagens/ft-perfil.png';
+    : `${fotoPerfil}`;
 
   return (
     <div className="nav cl">
       <div className="nav-content rw">
         <div className="nav-options rw">
-          <span id="hamburguer" className="icon-nav hamburguer" onClick={toggleMenu}></span>
+          <img id="hamburguer" className="icon-nav hamburguer" onClick={toggleMenu} src={hamburguer} alt="" />
 
           <div id="nav-left" ref={menuRef} className={`nav-left rw${menuAberto ? ' visible' : ''}`}>
-            <img src="/imagens/logo.png" alt="logo" className="nav-logo" />
+            <img src={logo} alt="logo" className="nav-logo" />
 
             <div className="nav-options rw">
               <Link to="/aluno" onClick={fecharMenu}>
-                <span className="icon-nav home"></span>
+                <img className="icon-nav home" src={home} alt="" />
               </Link>
               <Link to="/aluno/enviados" onClick={fecharMenu}>
-                <span className="icon-nav file-text"></span>
+                <img className="icon-nav file-text" src={filetext} alt="logo" />
               </Link>
-              <a
+              <a id="open-popup"
                 onClick={() => {
                   onAbrirInfo();
                   fecharMenu();
                 }}
                 style={{ cursor: 'pointer' }}
               >
-                <span className="icon-nav question"></span>
+                <img className="icon-nav question" src={question} alt="" />
               </a>
               <a id="alternador" onClick={alternarTema} style={{ cursor: 'pointer' }}>
-                <span className="icon-nav moon"></span>
+                <img className="icon-nav moon" src={moon} alt="" />
               </a>
 
               <AcessibilidadeMenu />
@@ -62,10 +71,8 @@ export default function Nav({ onAbrirInfo }) {
                 style={{ position: 'relative', cursor: 'pointer' }}
                 onClick={abrirPrazosPopup}
               >
-                <span
-                  className="icon-nav"
-                  style={{ backgroundImage: "url('/icons/sino.png')" }}
-                ></span>
+                <img className="icon-nav" src={sino} alt=""/>
+
                 {notificacoes.length > 0 && (
                   <span
                     id="sino-badge"
@@ -96,13 +103,13 @@ export default function Nav({ onAbrirInfo }) {
           <Link id="perfil" to="/aluno/perfil">
             <div className="nav-perfil rw">
               <div id="perfil-info" className="cl">
-                <p id="nome" className="name">{nome}</p>
-                <p id="email" className="email">{email}</p>
+                <p id="nome" className="name">{nome}Henrique Mandri</p>
+                <p id="email" className="email">{email}HenriqueMandri@gmail.com</p>
               </div>
               <img id="nav-foto" src={fotoSrc} alt="foto de perfil" className="foto-perfil" />
             </div>
           </Link>
-          <span className="icon student"></span>
+          <img className="icon student" src={student} alt="" />
         </div>
       </div>
     </div>

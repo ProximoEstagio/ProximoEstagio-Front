@@ -2,6 +2,8 @@
  * components/InfoEstagioPopup.jsx
  * Substitui a parte estática de scripts/popup.js ("O QUE É ESTÁGIO?").
  */
+import close from "../assets/icons/close.svg";
+
 const DOCUMENTOS = [
   { letra: 'A', texto: 'O documento A é um termo de aceite. Esse é o primeiro documento a ser entregue' },
   { letra: 'B', texto: 'o documento B é um documento relatando suas atividades no estágio. Esse é o segundo a ser entregue' },
@@ -21,7 +23,7 @@ export default function InfoEstagioPopup({ aberto, onFechar }) {
     >
       <div className="popup container">
         <div className="cl al-fe p8">
-          <span className="icon close" onClick={onFechar} style={{ cursor: 'pointer' }}></span>
+          <img className="icon close" onClick={onFechar} style={{ cursor: 'pointer' }} src={close} alt="" />
         </div>
 
         <div className="cl cc" style={{ paddingBottom: 48 }}>

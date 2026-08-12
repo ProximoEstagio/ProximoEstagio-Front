@@ -5,6 +5,8 @@
  * (lógica de disparo fica no DocumentosContext).
  */
 import { useDocumentos } from '../context/DocumentosContext';
+import close from "../assets/icons/close.svg";
+
 
 export default function NotificacoesPopup() {
   const { notificacoes, notifPopupAberto, fecharNotifPopup } = useDocumentos();
@@ -22,7 +24,7 @@ export default function NotificacoesPopup() {
       <div className="popup slim container">
         <div className="topV rw jc-sb">
           <p className="TopTxt">⚠️ Atenção aos Prazos!</p>
-          <span className="icon closeW" onClick={fecharNotifPopup} style={{ cursor: 'pointer' }}></span>
+          <img className="icon closeW" onClick={fecharNotifPopup} style={{ cursor: 'pointer' }} src={close} alt="" />
         </div>
         <div className="cl p16 g16">
           {notificacoes.map((n) => (

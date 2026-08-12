@@ -17,6 +17,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Api } from '../services/api';
+import '../styles/global.css'
+import '../styles/index.css'
 
 const MAPA_PAGINAS = {
   'aluno/area_aluno.jsx': '/aluno',

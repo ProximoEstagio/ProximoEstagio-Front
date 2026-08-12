@@ -7,6 +7,7 @@ import { useRef, useState } from 'react';
 import { MODOS_ACESSIBILIDADE } from '../constants/acessibilidade';
 import { useAcessibilidade } from '../hooks/useAcessibilidade';
 import { useClickOutside } from '../hooks/useClickOutside';
+import olho from "../assets/icons/olho.png";
 
 export default function AcessibilidadeMenu() {
   const { modo, definirModo } = useAcessibilidade();
@@ -22,16 +23,19 @@ export default function AcessibilidadeMenu() {
 
   return (
     <div ref={ref} style={{ position: 'relative' }}>
-      <span
+
+      <img 
+        className="icon-nav acessibilidade" 
+        src={olho} alt=""
         id="btn-acessibilidade"
-        className="icon-nav acessibilidade"
         title="Acessibilidade"
         style={{ cursor: 'pointer' }}
         onClick={(e) => {
           e.stopPropagation();
           setAberto((v) => !v);
         }}
-      ></span>
+      />
+
       <div id="menu-acessibilidade" className={`menu-acess${aberto ? ' visible' : ''}`}>
         {MODOS_ACESSIBILIDADE.map((m) => (
           <button

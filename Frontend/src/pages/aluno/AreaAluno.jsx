@@ -7,7 +7,8 @@
 import { useEffect, useState } from 'react';
 import { Api, BASE_URL_STATIC } from '../../services/api';
 import { useDocumentos } from '../../context/DocumentosContext';
-import '../styles/aluno/area_aluno.css'
+import '../../styles/aluno/area_aluno.css'
+
 
 
 

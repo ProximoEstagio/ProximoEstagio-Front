@@ -7,7 +7,7 @@
 import { useMemo, useState } from 'react';
 import { useDocumentos } from '../../context/DocumentosContext';
 import { BASE_URL_STATIC } from '../../services/api';
-import '../styles/aluno/enviados.css'
+import '../../styles/aluno/enviados.css'
 
 const STATUS_ICON = {
   Validado: 'check',

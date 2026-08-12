@@ -4,6 +4,7 @@
  * Abre ao clicar no sino da Nav (via useDocumentos().abrirPrazosPopup).
  */
 import { useDocumentos } from '../context/DocumentosContext';
+import close from "../assets/icons/close.svg";
 
 export default function PrazosPopup() {
   const { prazos, prazosPopupAberto, fecharPrazosPopup } = useDocumentos();
@@ -21,7 +22,7 @@ export default function PrazosPopup() {
       <div className="popup slim container">
         <div className="topV rw jc-sb">
           <p className="TopTxt">Prazos de Entrega</p>
-          <span className="icon closeW" onClick={fecharPrazosPopup} style={{ cursor: 'pointer' }}></span>
+          <img className="icon closeW" onClick={fecharPrazosPopup} style={{ cursor: 'pointer' }} src={close} alt="" />
         </div>
         <div className="cl p16 g16">
           {prazos.map((p) => {
