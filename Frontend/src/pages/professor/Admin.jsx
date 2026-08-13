@@ -8,7 +8,7 @@
 import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Api } from '../../services/api';
-import PopupLayer from '../../components/PopupLayer';
+import PopupLayer from '../../components/alunos/PopupLayer';
 import '../../styles/professor/lista.css';
 
 export default function Admin() {

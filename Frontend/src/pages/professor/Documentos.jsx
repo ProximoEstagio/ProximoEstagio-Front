@@ -7,7 +7,7 @@
  */
 import { useEffect, useMemo, useState } from 'react';
 import { Api, BASE_URL_STATIC } from '../../services/api';
-import PopupLayer from '../../components/PopupLayer';
+import PopupLayer from '../../components/alunos/PopupLayer';
 import '../../styles/professor/lista.css';
 import '../../styles/professor/documentos.css';
 

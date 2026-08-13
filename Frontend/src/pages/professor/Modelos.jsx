@@ -5,7 +5,7 @@
  */
 import { useEffect, useState } from 'react';
 import { Api, BASE_URL_STATIC } from '../../services/api';
-import PopupLayer from '../../components/PopupLayer';
+import PopupLayer from '../../components/alunos/PopupLayer';
 import '../../styles/professor/modelos.css';
 
 const DESCRICOES_PADRAO = {

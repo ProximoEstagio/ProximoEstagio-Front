@@ -10,7 +10,7 @@
  *   </Route>
  */
 import { Outlet } from 'react-router-dom';
-import NavSecretaria from '../components/NavSecretaria';
+import NavSecretaria from '../components/secretaria/NavSecretaria';
 
 export default function SecretariaLayout() {
   return (

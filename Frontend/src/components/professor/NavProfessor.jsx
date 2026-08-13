@@ -12,20 +12,20 @@
  * checagem que o nav.js original fazia antes de montar o innerHTML.
  */
 import { Link } from 'react-router-dom';
-import { useMenuMobile } from '../hooks/useMenuMobile';
-import { useTema } from '../hooks/useTema';
-import { useLogout } from '../hooks/useLogout';
-import { BASE_URL_STATIC } from '../services/api';
-import AcessibilidadeMenu from './AcessibilidadeMenu';
-import logo from '../assets/imagens/logo.png';
-import users from '../assets/icons/users.svg';
-import filetext from '../assets/icons/file-text.svg';
-import fotoPadrao from '../assets/imagens/ft-perfil.png';
-import squarepencil from '../assets/icons/square-pencil.svg';
-import adminicon from '../assets/icons/banco.svg';
-import moon from '../assets/icons/moon.svg'
-import logout1 from '../assets/icons/logout.svg'
-import teacher from '../assets/icons/teacher.svg'
+import { useMenuMobile } from '../../hooks/useMenuMobile';
+import { useTema } from '../../hooks/useTema';
+import { useLogout } from '../../hooks/useLogout';
+import { BASE_URL_STATIC } from '../../services/api';
+import AcessibilidadeMenu from '../AcessibilidadeMenu';
+import logo from '../../assets/imagens/logo.png';
+import users from '../../assets/icons/users.svg';
+import filetext from '../../assets/icons/file-text.svg';
+import fotoPadrao from '../../assets/imagens/ft-perfil.png';
+import squarepencil from '../../assets/icons/square-pencil.svg';
+import adminicon from '../../assets/icons/banco.svg';
+import moon from '../../assets/icons/moon.svg'
+import logout1 from '../../assets/icons/logout.svg'
+import teacher from '../../assets/icons/teacher.svg'
 
 export default function NavProfessor() {
   const { menuAberto, menuRef, toggleMenu, fecharMenu } = useMenuMobile();

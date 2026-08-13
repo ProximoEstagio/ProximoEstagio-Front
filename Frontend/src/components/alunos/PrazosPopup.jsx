@@ -3,8 +3,8 @@
  * Substitui exibirPopupPrazos() de progresso.js/sino.js.
  * Abre ao clicar no sino da Nav (via useDocumentos().abrirPrazosPopup).
  */
-import { useDocumentos } from '../context/DocumentosContext';
-import close from "../assets/icons/close.svg";
+import { useDocumentos } from '../../context/DocumentosContext';
+import close from "../../assets/icons/close.svg";
 
 export default function PrazosPopup() {
   const { prazos, prazosPopupAberto, fecharPrazosPopup } = useDocumentos();

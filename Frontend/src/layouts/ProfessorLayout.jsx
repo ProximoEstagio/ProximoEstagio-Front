@@ -4,7 +4,7 @@
  * professor. Segue o mesmo padrão de AlunoLayout.jsx / SecretariaLayout.jsx.
  */
 import { Outlet } from 'react-router-dom';
-import NavProfessor from '../components/NavProfessor';
+import NavProfessor from '../components/professor/NavProfessor';
 
 export default function ProfessorLayout() {
   return (

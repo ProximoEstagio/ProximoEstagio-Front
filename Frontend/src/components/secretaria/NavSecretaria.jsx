@@ -9,10 +9,10 @@
  *  - hooks/useLogout.js      (mesmo usado em pages/aluno/Perfil.jsx)
  */
 import { Link } from 'react-router-dom';
-import { useMenuMobile } from '../hooks/useMenuMobile';
-import { useTema } from '../hooks/useTema';
-import AcessibilidadeMenu from './AcessibilidadeMenu';
-import { useLogout } from '../hooks/useLogout';
+import { useMenuMobile } from '../../hooks/useMenuMobile';
+import { useTema } from '../../hooks/useTema';
+import AcessibilidadeMenu from '../AcessibilidadeMenu';
+import { useLogout } from '../../hooks/useLogout';
 
 export default function NavSecretaria() {
   const { menuAberto, menuRef, toggleMenu, fecharMenu } = useMenuMobile();

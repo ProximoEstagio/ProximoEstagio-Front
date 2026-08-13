@@ -4,8 +4,8 @@
  * Abre automaticamente 1x por sessão quando há prazos vencidos/urgentes
  * (lógica de disparo fica no DocumentosContext).
  */
-import { useDocumentos } from '../context/DocumentosContext';
-import close from "../assets/icons/close.svg";
+import { useDocumentos } from '../../context/DocumentosContext';
+import close from "../../assets/icons/close.svg";
 
 
 export default function NotificacoesPopup() {

@@ -7,7 +7,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Api } from '../../services/api';
-import PopupLayer from '../../components/PopupLayer';
+import PopupLayer from '../../components/alunos/PopupLayer';
 import '../../styles/professor/lista.css';
 import '../../styles/professor/alunos.css';
 import userplus from '../../assets/icons/user-plus.svg'

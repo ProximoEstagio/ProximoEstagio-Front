@@ -1,5 +1,5 @@
-import close from "../assets/icons/close.svg";
-import file from "../assets/icons/file.svg";
+import close from "../../assets/icons/close.svg";
+import file from "../../assets/icons/file.svg";
 
 const DOCUMENTOS = [
     {

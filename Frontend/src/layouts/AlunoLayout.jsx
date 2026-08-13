@@ -16,9 +16,9 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Nav from '../components/Nav';
-import InfoEstagioPopup from '../components/InfoEstagioPopup';
-import NotificacoesPopup from '../components/NotificacoesPopup';
-import PrazosPopup from '../components/PrazosPopup';
+import InfoEstagioPopup from '../components/alunos/InfoEstagioPopup';
+import NotificacoesPopup from '../components/alunos/NotificacoesPopup';
+import PrazosPopup from '../components/alunos/PrazosPopup';
 import { DocumentosProvider } from '../context/DocumentosContext';
 
 export default function AlunoLayout() {
