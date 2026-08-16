@@ -1,12 +1,14 @@
 /**
  * pages/professor/Documentos.jsx
  * Substitui documentos.html + scripts/documentos.js + scripts/popupDocumento.js.
+ * Chamadas de API centralizadas em services/professorDocumentosService.js.
  * Reaproveita components/PopupLayer.jsx e o padrão de filtro por checkbox
  * (option-wrapper/custom-box) já usado em pages/aluno/Enviados.jsx e
  * pages/secretaria/AlunosConcluidos.jsx.
  */
 import { useEffect, useMemo, useState } from 'react';
-import { Api, BASE_URL_STATIC } from '../../services/api';
+import { BASE_URL_STATIC } from '../../services/api';
+import { ProfessorDocumentosService } from '../../services/professorDocumentosService';
 import PopupLayer from '../../components/alunos/PopupLayer';
 import '../../styles/professor/lista.css';
 import '../../styles/professor/documentos.css';
@@ -45,10 +47,10 @@ export default function Documentos() {
   async function carregarDocumentos() {
     setCarregando(true);
     try {
-      const data = await Api.post('/professor/documentos', {
-        professor_id: professorId,
-        nivel: localStorage.getItem('nivel') || 'professor',
-      });
+      const data = await ProfessorDocumentosService.listar(
+        professorId,
+        localStorage.getItem('nivel') || 'professor'
+      );
       if (!data || data.erro) {
         console.error(data?.erro);
         return;
@@ -87,10 +89,10 @@ export default function Documentos() {
   };
 
   async function atualizarStatus(doc, status, feedback) {
-    await Api.post('/professor/status', {
-      professor_id: professorId,
-      documento_id: doc.iddocumento,
-      tipo_id: doc.tipo_idtipo,
+    await ProfessorDocumentosService.atualizarStatus({
+      professorId,
+      documentoId: doc.iddocumento,
+      tipoId: doc.tipo_idtipo,
       status,
       feedback,
     });

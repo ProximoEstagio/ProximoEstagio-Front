@@ -1,12 +1,14 @@
 /**
  * pages/professor/AlunoDetalhe.jsx
  * Substitui aluno.html + scripts/alunoDetalhe.js.
+ * Chamadas de API centralizadas em services/alunoDetalheService.js.
  * Antes usava ?id= na query string; como rota React, é /professor/aluno/:id
  * (veja App.jsx e o link em pages/professor/Alunos.jsx).
  */
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Api, BASE_URL_STATIC } from '../../services/api';
+import { BASE_URL_STATIC } from '../../services/api';
+import { AlunoDetalheService } from '../../services/alunoDetalheService';
 import '../../styles/professor/aluno.css';
 
 const STATUS_ICON = { Validado: 'check', Invalidado: 'off', Visualizado: 'eye', 'Não Avaliado': 'clock' };
@@ -29,7 +31,7 @@ export default function AlunoDetalhe() {
   async function carregarDetalhe() {
     setCarregando(true);
     try {
-      const data = await Api.post('/professor/aluno/detalhe', { aluno_id: alunoId });
+      const data = await AlunoDetalheService.buscarDetalhe(alunoId);
       if (!data || data.erro) {
         console.error(data?.erro);
         return;
@@ -45,7 +47,7 @@ export default function AlunoDetalhe() {
 
   async function carregarPrazos() {
     try {
-      const data = await Api.get('/professor/prazos', { aluno_id: alunoId });
+      const data = await AlunoDetalheService.listarPrazos(alunoId);
       setPrazos(data || []);
     } catch (e) {
       console.error('Erro ao carregar prazos:', e);
@@ -53,13 +55,13 @@ export default function AlunoDetalhe() {
   }
 
   async function salvarPrazo(tipoId, dataLimite) {
-    const data = await Api.post('/professor/prazos', { aluno_id: alunoId, tipo_id: tipoId, dataLimite });
+    const data = await AlunoDetalheService.salvarPrazo(alunoId, tipoId, dataLimite);
     if (data?.ok) await carregarPrazos();
     else alert(data?.erro || 'Erro ao salvar prazo.');
   }
 
   async function removerPrazo(tipoId) {
-    const data = await Api.post('/professor/prazos', { aluno_id: alunoId, tipo_id: tipoId, dataLimite: null });
+    const data = await AlunoDetalheService.removerPrazo(alunoId, tipoId);
     if (data?.ok) await carregarPrazos();
   }
 
@@ -67,7 +69,7 @@ export default function AlunoDetalhe() {
     const novoValor = !concluido;
     if (!confirm(novoValor ? 'Marcar este aluno como concluído? Ele ficará visível para a secretaria.' : 'Remover conclusão deste aluno?')) return;
 
-    const data = await Api.post('/professor/aluno/concluir', { aluno_id: alunoId, concluido: novoValor ? 1 : 0 });
+    const data = await AlunoDetalheService.toggleConcluido(alunoId, novoValor);
     if (data?.ok) {
       setAluno((prev) => ({ ...prev, concluido: novoValor ? 1 : 0 }));
     } else {

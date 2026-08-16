@@ -1,13 +1,14 @@
 /**
  * pages/professor/Admin.jsx
  * Substitui admin.html + scripts/admin.js.
+ * Chamadas de API centralizadas em services/adminService.js.
  * Reaproveita components/PopupLayer.jsx pros 3 popups (novo professor,
  * novo curso, reatribuir professor). Redireciona pra /professor/alunos se
  * o usuário logado não for admin, igual à checagem original.
  */
 import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import { Api } from '../../services/api';
+import { AdminService } from '../../services/adminService';
 import PopupLayer from '../../components/alunos/PopupLayer';
 import '../../styles/professor/lista.css';
 
@@ -30,15 +31,15 @@ export default function Admin() {
   if (nivel !== 'admin') return <Navigate to="/professor/alunos" replace />;
 
   async function carregarTipos() {
-    const data = await Api.get('/admin/tipos');
+    const data = await AdminService.listarTipos();
     setTipos(data || []);
   }
   async function carregarCursos() {
-    const data = await Api.get('/admin/cursos');
+    const data = await AdminService.listarCursos();
     setCursos(data || []);
   }
   async function carregarProfessores() {
-    const data = await Api.get('/admin/professores');
+    const data = await AdminService.listarProfessores();
     setProfessores(Array.isArray(data) ? data : []);
   }
 
@@ -48,7 +49,7 @@ export default function Admin() {
       alert('Digite o nome do tipo.');
       return;
     }
-    const data = await Api.post('/admin/tipos', { action: 'criar', nome });
+    const data = await AdminService.criarTipo(nome);
     if (data?.ok) {
       setNovoTipo('');
       carregarTipos();
@@ -58,7 +59,7 @@ export default function Admin() {
   };
 
   const toggleTipo = async (tipoId) => {
-    const data = await Api.post('/admin/tipos', { action: 'toggleAtivo', tipo_id: tipoId });
+    const data = await AdminService.toggleTipo(tipoId);
     if (data?.ok) carregarTipos();
   };
 
@@ -196,7 +197,7 @@ function PopupNovoProfessor({ aberto, cursos, onFechar, onSalvo }) {
       alert('Nome, email e senha são obrigatórios.');
       return;
     }
-    const data = await Api.post('/admin/professores', {
+    const data = await AdminService.criarProfessor({
       nome, email, senha, telefone, nivel, curso_id: cursoId || null,
     });
     if (data?.ok) {
@@ -247,7 +248,7 @@ function PopupNovoCurso({ aberto, professores, onFechar, onSalvo }) {
     if (!nomeCurso.trim()) { alert('Digite o nome do curso.'); return; }
     if (!professorId) { alert('Selecione um professor.'); return; }
 
-    const data = await Api.post('/admin/cursos', { nomeCurso: nomeCurso.trim(), professor_id: professorId });
+    const data = await AdminService.criarCurso(nomeCurso.trim(), professorId);
     if (data?.ok) {
       alert('Curso criado com sucesso!');
       onFechar();
@@ -290,7 +291,7 @@ function PopupReatribuir({ aberto, cursoId, nomeCurso, professores, onFechar, on
   const salvar = async () => {
     if (!professorId) { alert('Selecione um professor.'); return; }
 
-    const data = await Api.post('/admin/cursos/atualizar', { curso_id: cursoId, professor_id: professorId });
+    const data = await AdminService.reatribuirCurso(cursoId, professorId);
     if (data?.ok) {
       alert('Professor reatribuído com sucesso!');
       onFechar();

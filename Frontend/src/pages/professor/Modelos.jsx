@@ -146,7 +146,7 @@ function PopupModelo({ tipo, aberto, onFechar, onSalvo }) {
             Instruções para os alunos <span style={{ opacity: 0.6, fontSize: 12 }}>(opcional)</span>
           </p>
           <textarea value={instrucoes} onChange={(e) => setInstrucoes(e.target.value)} />
-        </div>
+        </div>  
         <p style={{ fontWeight: 'bold', color: '#444' }}>
           {tipo ? `Tipo selecionado: ${tipo}` : 'Tipo não definido'}
         </p>

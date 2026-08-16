@@ -653,10 +653,7 @@ button:hover {
   padding-bottom: 64px;
   gap: 32px;
   margin: 0 auto;
-}
-
-.content.slim {
-  width: 50%;
+  
 }
 
 .container {
@@ -909,13 +906,6 @@ select {
     display: none;
   }
 
-  .content {
-    width: 80%;
-  }
-
-  .content.slim {
-    width: 60%;
-  }
 
   .popup {
     width: 70%;
@@ -947,14 +937,6 @@ select {
 
   .hamburguer {
     display: flex;
-  }
-
-  .content {
-    width: 85%;
-  }
-
-  .content.slim {
-    width: 70%;
   }
 
   .popup {
@@ -993,13 +975,6 @@ select {
     display: flex;
   }
 
-  .content {
-    width: 90%;
-  }
-
-  .content.slim {
-    width: 85%;
-  }
 
   .popup {
     width: 80%;
@@ -1035,14 +1010,6 @@ select {
 
   .hamburguer {
     display: flex;
-  }
-
-  .content {
-    width: 95%;
-  }
-
-  .content.slim {
-    width: 95%;
   }
 
   .popup {

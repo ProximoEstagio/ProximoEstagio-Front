@@ -1,278 +1,269 @@
 /**
- * pages/aluno/Perfil.jsx
- * Substitui perfil.html + scripts/perfil.js.
- *
- * TODO: logout() aqui só limpa o localStorage e navega para /login —
- * porte a lógica completa de logout.js (ex: invalidar sessão no back-end)
- * quando esse arquivo for enviado.
+ * pages/aluno/AreaAluno.jsx
+ * Substitui area_aluno.html + scripts/uploadDoc.js + scripts/modelo.js.
+ * Barra de progresso e "último documento" vêm do DocumentosContext
+ * (equivalente ao que progresso.js fazia).
  */
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Api, BASE_URL_STATIC } from '../../services/api';
-import '../../styles/aluno/perfil.css'
+import { ModelosService } from '../../services/modelosService';
+import { useDocumentos } from '../../context/DocumentosContext';
+import '../../styles/professor/perfil.css';
 
-export default function Perfil() {
-  const navigate = useNavigate();
-  const [editando, setEditando] = useState(false);
-  const [carregando, setCarregando] = useState(true);
-  const [perfil, setPerfil] = useState({ nomeUser: '', emailUser: '', telefone: '', curso: '' });
-  const [form, setForm] = useState({
-    nomeUser: '',
-    emailUser: '',
-    telefone: '',
-    novaSenha: '',
-    confirmarSenha: '',
-  });
-  const [foto, setFoto] = useState(localStorage.getItem('foto') || '');
+
+const DESCRICOES_PADRAO = {
+  A: 'Esse termo deve conter dados do aluno, da empresa, do supervisor direto e a data de início das atividades.',
+  B: 'O aluno descreve as atividades realizadas e as relaciona com o conteúdo do curso.',
+  C: 'Declaração de Atividades, que formaliza o encerramento das atividades desenvolvidas durante o período.',
+};
+
+const STATUS_ICON = {
+  Validado: 'check',
+  Invalidado: 'off',
+  Visualizado: 'eye',
+  'Não Avaliado': 'clock',
+};
+
+export default function AreaAluno() {
+  const { tiposEnviados, ultimos, carregando, recarregar } = useDocumentos();
+
+  // ── Envio de documento (uploadDoc.js) ──────────────────────────────
+  const [tipos, setTipos] = useState([]);
+  const [arquivo, setArquivo] = useState(null);
+  const [nomeDoc, setNomeDoc] = useState('');
+  const [recado, setRecado] = useState('');
+  const [tipoSelecionado, setTipoSelecionado] = useState('');
+  const [enviando, setEnviando] = useState(false);
 
   useEffect(() => {
-    carregarPerfil();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    Api.get('/aluno/tipos')
+      .then((data) => {
+        if (Array.isArray(data)) setTipos(data);
+      })
+      .catch((e) => console.error('Erro ao carregar tipos:', e));
   }, []);
 
-  async function carregarPerfil() {
-    setCarregando(true);
-    try {
-      const api = await Api.post('/perfil', {
-        reason: 'loadPage',
-        emailUser: localStorage.getItem('emailUser'),
-        tipoUser: localStorage.getItem('tipoUsuario'),
-      });
-      if (!api) return;
+  const handleEnviar = async () => {
+    const alunoId = localStorage.getItem('idaluno');
 
-      const dados = {
-        nomeUser: api.nome || '',
-        emailUser: api.email || '',
-        telefone: api.telefone || '',
-        curso: api.nomeCurso || '',
-      };
-      setPerfil(dados);
-      localStorage.setItem('nomeUser', dados.nomeUser);
-      localStorage.setItem('emailUser', dados.emailUser);
-      localStorage.setItem('telefone', dados.telefone);
-      localStorage.setItem('curso', dados.curso);
-
-      if (api.foto) {
-        localStorage.setItem('foto', api.foto);
-        setFoto(api.foto);
-      }
-    } catch (e) {
-      console.error('Erro ao carregar perfil:', e);
-    } finally {
-      setCarregando(false);
-    }
-  }
-
-  const iniciarEdicao = () => {
-    setForm({
-      nomeUser: perfil.nomeUser,
-      emailUser: perfil.emailUser,
-      telefone: perfil.telefone,
-      novaSenha: '',
-      confirmarSenha: '',
-    });
-    setEditando(true);
-  };
-
-  const salvar = async () => {
-    if (form.novaSenha && form.novaSenha !== form.confirmarSenha) {
-      alert('As senhas não coincidem!');
+    if (!arquivo || !nomeDoc.trim() || !tipoSelecionado) {
+      alert('Preencha nome, tipo e selecione um arquivo!');
       return;
     }
-
-    const dados = {
-      reason: 'update',
-      emailUser: localStorage.getItem('emailUser'),
-      tipoUser: localStorage.getItem('tipoUsuario'),
-      nome: form.nomeUser,
-      email: form.emailUser,
-      telefone: form.telefone,
-    };
-    if (form.novaSenha) dados.senha = form.novaSenha;
-
-    try {
-      const res = await Api.post('/perfil', dados);
-      if (res?.status === 'success') {
-        localStorage.setItem('nomeUser', dados.nome);
-        localStorage.setItem('emailUser', dados.email);
-        localStorage.setItem('telefone', dados.telefone);
-        setPerfil((prev) => ({
-          ...prev,
-          nomeUser: dados.nome,
-          emailUser: dados.email,
-          telefone: dados.telefone,
-        }));
-        setEditando(false);
-      } else {
-        alert(res?.message || 'Erro ao salvar.');
-      }
-    } catch (e) {
-      console.error('Erro ao salvar perfil:', e);
-      alert('Erro ao salvar.');
-    }
-  };
-
-  const handleFoto = async (e) => {
-    const arquivo = e.target.files[0];
-    if (!arquivo) return;
-
-    const ext = arquivo.name.split('.').pop().toLowerCase();
-    if (!['jpg', 'jpeg', 'png'].includes(ext)) {
-      alert('Apenas arquivos JPG e PNG são permitidos.');
+    if (!alunoId) {
+      alert('Erro: aluno não identificado. Faça login novamente.');
       return;
     }
 
     const formData = new FormData();
-    formData.append('foto', arquivo);
-    formData.append('emailUser', localStorage.getItem('emailUser'));
-    formData.append('tipoUser', localStorage.getItem('tipoUsuario'));
+    formData.append('arquivo', arquivo);
+    formData.append('nome_documento', nomeDoc.trim());
+    formData.append('recado', recado.trim());
+    formData.append('tipo_documento', tipoSelecionado);
+    formData.append('aluno_id', alunoId);
 
+    setEnviando(true);
     try {
-      const data = await Api.upload('/upload-foto', formData);
-      if (data?.status === 'sucesso') {
-        localStorage.setItem('foto', data.foto);
-        setFoto(data.foto);
+      const data = await Api.upload('/aluno/criar-documento', formData);
+      if (data.status === 'sucesso') {
+        alert(data.mensagem);
+        setArquivo(null);
+        setNomeDoc('');
+        setRecado('');
+        setTipoSelecionado('');
+        recarregar();
       } else {
-        alert(data?.mensagem || 'Erro ao atualizar foto.');
+        alert(data.mensagem || 'Erro ao enviar documento.');
       }
-    } catch (err) {
-      console.error('Erro ao enviar foto:', err);
-      alert('Erro ao atualizar foto.');
+    } catch (e) {
+      console.error('Erro:', e);
+      alert('Erro ao conectar com o servidor.');
+    } finally {
+      setEnviando(false);
     }
   };
 
-  const logout = () => {
-    localStorage.clear();
-    navigate('/login');
+  // ── Modelos (modelo.js) ──────────────────────────────────────────────
+  const [descricoesModelo, setDescricoesModelo] = useState(DESCRICOES_PADRAO);
+
+  useEffect(() => {
+    ModelosService.listar()
+      .then((data) => {
+        if (!data?.success) return;
+        setDescricoesModelo((prev) => ({
+          A: data.modelos?.A?.descricao || prev.A,
+          B: data.modelos?.B?.descricao || prev.B,
+          C: data.modelos?.C?.descricao || prev.C,
+        }));
+      })
+      .catch((e) => console.error('Erro ao carregar descrições:', e));
+  }, []);
+
+  const baixarModelo = (tipo) => {
+    ModelosService.baixar(tipo);
   };
 
-  const fotoSrc = foto ? `${BASE_URL_STATIC}/storage/${foto}?t=${Date.now()}` : '/imagens/ft-perfil.png';
+  // ── Último documento (progresso.js) ─────────────────────────────────
+  const ultimo = ultimos[0];
+  const ultimoDataFmt = ultimo ? new Date(ultimo.dataEmissao).toLocaleDateString('pt-BR') : null;
+  const ultimoCaminho = ultimo?.caminho_arquivo
+    ? `${BASE_URL_STATIC}/storage/${ultimo.caminho_arquivo}`
+    : null;
 
   return (
-    <div className="content slim cl">
-      <div className="container cl">
-        <div className="topC rw jc-sb al-fs">
-          {/* Foto clicável */}
-          <div style={{ position: 'relative', width: 100, height: 100 }}>
-            <img
-              src={fotoSrc}
-              alt="foto de perfil"
-              className="ft-perfil"
-              style={{ cursor: 'pointer' }}
-              onClick={() => document.getElementById('input-foto').click()}
-            />
+    <div className="content cl">
+      {/* Barra de Progresso */}
+      <div className="container p16 cl g8">
+        <p className="fs16">
+          <b>Progresso de Entrega</b>
+        </p>
+        <div className="rw g4" id="barra-progresso">
+          {['A', 'B'].map((tipo) => {
+            const completo = tiposEnviados.includes(tipo);
+            return (
+              <div className="rw g4" key={tipo}>
+                <div id={`circle-${tipo}`} className={completo ? 'circleComplete' : 'circle'}>
+                  <p>{tipo}</p>
+                </div>
+                <div id={`prog-${tipo}`} className="progBar">
+                  <div className="progProgres" style={{ width: completo ? '100%' : '0%' }}></div>
+                </div>
+              </div>
+            );
+          })}
+          <div id="circle-C" className={tiposEnviados.includes('C') ? 'circleComplete' : 'circle'}>
+            <p>C</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Grid envio */}
+      <div className="grid-col">
+        <div className="container cl">
+          <div className="topV">
             <input
-              type="file"
-              id="input-foto"
-              accept=".jpg,.jpeg,.png"
-              style={{ display: 'none' }}
-              onChange={handleFoto}
+              id="nomeDoc"
+              placeholder="Nome do Documento"
+              type="text"
+              value={nomeDoc}
+              onChange={(e) => setNomeDoc(e.target.value)}
             />
-            <div
-              style={{
-                position: 'absolute',
-                bottom: 0,
-                right: 0,
-                background: 'var(--cinza-paleta)',
-                borderRadius: '50%',
-                width: 24,
-                height: 24,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                pointerEvents: 'none',
-              }}
-            >
-              <span className="icon pencil" style={{ width: 18, height: 18, backgroundSize: '80%' }}></span>
+          </div>
+          <div className="cl p16 g16 jc-sb">
+            <div className="cl g16">
+              <select
+                id="tipoDoc"
+                value={tipoSelecionado}
+                onChange={(e) => setTipoSelecionado(e.target.value)}
+              >
+                <option value="">Selecione o tipo de documento</option>
+                {tipos.map((tipo) => (
+                  <option key={tipo.idtipo} value={tipo.idtipo}>
+                    {tipo.nome}
+                  </option>
+                ))}
+              </select>
+              <div>
+                <p>Recado para este Documento</p>
+                <textarea id="Recado" value={recado} onChange={(e) => setRecado(e.target.value)} />
+              </div>
+            </div>
+            <div className="rw g16">
+              <p id="nomeArquivoText" className="fs14" style={{ marginBottom: 4 }}>
+                {arquivo?.name || ''}
+              </p>
+              <button
+                className="btn-F"
+                type="button"
+                onClick={() => document.getElementById('fileinput').click()}
+              >
+                Anexar
+              </button>
+              <input
+                type="file"
+                id="fileinput"
+                style={{ display: 'none' }}
+                onChange={(e) => setArquivo(e.target.files[0] || null)}
+              />
+              <button className="btn-C" type="button" onClick={handleEnviar} disabled={enviando}>
+                {enviando ? 'Enviando...' : 'Enviar'}
+              </button>
             </div>
           </div>
+        </div>
 
-          <div className="cl">
-            <p>Curso :</p>
-            <p id="curso">{perfil.curso}</p>
+        {/* Último documento enviado */}
+        <div className="container cl" id="ultimo-doc-container">
+          <div className="topC">
+            <p className="TopTxt">Último Documento Enviado</p>
           </div>
-
-          <button id="logout" className="btn-V fc" onClick={logout}>
-            <span className="icon logout"></span>
-            <p className="fs18">Sair</p>
-          </button>
+          <div id="ultimo-doc-content" className="cl p16 cc g8">
+            {carregando ? (
+              <p>Carregando...</p>
+            ) : !ultimo ? (
+              <>
+                <p className="fs16">
+                  <b>Você ainda não enviou nenhum Documento</b>
+                </p>
+                <p>Eles aparecerão aqui assim que você enviar um</p>
+              </>
+            ) : (
+              <div className="cl g8" style={{ width: '100%' }}>
+                <div className="rw jc-sb">
+                  <p className="fs16">
+                    <b>{ultimo.descricao || '(sem nome)'}</b>
+                  </p>
+                  <span className={`icon-list ${STATUS_ICON[ultimo.status] || 'clock'}`}></span>
+                </div>
+                <p>Tipo : {ultimo.tipo}</p>
+                <p>Status : {ultimo.status}</p>
+                <p>Data : {ultimoDataFmt}</p>
+                {ultimo.feedback && (
+                  <div className="information-container">
+                    <div className="rw jc-sb">
+                      <p>Feedback :</p>
+                      <p>{ultimo.status}</p>
+                    </div>
+                    <p>{ultimo.feedback}</p>
+                  </div>
+                )}
+                {ultimoCaminho && (
+                  <button className="btn-link fc" onClick={() => window.open(ultimoCaminho, '_blank')}>
+                    <span className="icon-link"></span> Abrir Documento
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
         </div>
+      </div>
 
-        <div className="info-perfil">
-          <p>Informações pessoais</p>
+      {/* Faixa */}
+      <div className="container topC">
+        <p className="TopTxt">
+          Siga as instruções para garantir que seus documentos sejam preenchidos de maneira correta
+          e completa, atente-se as orientações fornecidas pelos Modelos.
+        </p>
+      </div>
 
-          {carregando ? (
-            <p>Carregando...</p>
-          ) : !editando ? (
-            <>
-              <div className="cl">
-                <p className="desc">Nome :</p>
-                <p className="fs18">{perfil.nomeUser}</p>
-              </div>
-              <div className="cl">
-                <p className="desc">Email :</p>
-                <p className="fs18">{perfil.emailUser}</p>
-              </div>
-              <div className="cl">
-                <p className="desc">Telefone :</p>
-                <p className="fs18">{perfil.telefone}</p>
-              </div>
-              <button className="btn-C fc as-fe" onClick={iniciarEdicao}>
-                <span className="icon pencil"></span>
-                <p>Editar perfil</p>
-              </button>
-            </>
-          ) : (
-            <>
-              <div className="cl">
-                <p className="desc">Nome :</p>
-                <input
-                  type="text"
-                  value={form.nomeUser}
-                  onChange={(e) => setForm({ ...form, nomeUser: e.target.value })}
-                />
-              </div>
-              <div className="cl">
-                <p className="desc">Email :</p>
-                <input
-                  type="email"
-                  value={form.emailUser}
-                  onChange={(e) => setForm({ ...form, emailUser: e.target.value })}
-                />
-              </div>
-              <div className="cl">
-                <p className="desc">Telefone :</p>
-                <input
-                  type="text"
-                  placeholder="Apenas números"
-                  value={form.telefone}
-                  onChange={(e) => setForm({ ...form, telefone: e.target.value })}
-                />
-              </div>
-              <div className="cl">
-                <p className="desc">Nova Senha :</p>
-                <input
-                  type="password"
-                  placeholder="Deixe em branco para não alterar"
-                  value={form.novaSenha}
-                  onChange={(e) => setForm({ ...form, novaSenha: e.target.value })}
-                />
-              </div>
-              <div className="cl">
-                <p className="desc">Confirmar Senha :</p>
-                <input
-                  type="password"
-                  value={form.confirmarSenha}
-                  onChange={(e) => setForm({ ...form, confirmarSenha: e.target.value })}
-                />
-              </div>
-              <button className="btn-C fc as-fe" onClick={salvar}>
-                <span className="icon pencil"></span>
-                <p>Salvar Alterações</p>
-              </button>
-            </>
-          )}
-        </div>
+      {/* Grid modelos */}
+      <div className="grid-col">
+        {['A', 'B', 'C'].map((tipo) => (
+          <div className="container cl p16 g32" key={tipo}>
+            <div className="cl g8">
+              <p className="fs16">
+                <b>Modelo do Documento {tipo}</b>
+              </p>
+              <p>
+                <b>Instruções :</b>
+              </p>
+              <p id={`desc-modelo-${tipo}`}>{descricoesModelo[tipo]}</p>
+            </div>
+            <button className="btn-V" onClick={() => baixarModelo(tipo)}>
+              Baixar Modelo
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );

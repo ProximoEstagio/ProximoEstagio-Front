@@ -1,12 +1,12 @@
 /**
  * pages/professor/Perfil.jsx
  * Substitui perfil.html + scripts/perfil.js (professor).
- * É praticamente idêntico a pages/aluno/Perfil.jsx (mesmo endpoint /perfil,
- * mesmo fluxo de edição e upload de foto) — reaproveitado daqui, trocando
- * só o logout pelo hook compartilhado useLogout (igual NavSecretaria).
+ * Chamadas de API centralizadas em services/perfilService.js (o mesmo
+ * service usado por pages/aluno/Perfil.jsx — endpoint idêntico).
  */
 import { useEffect, useState } from 'react';
-import { Api, BASE_URL_STATIC } from '../../services/api';
+import { BASE_URL_STATIC } from '../../services/api';
+import { PerfilService } from '../../services/perfilService';
 import { useLogout } from '../../hooks/useLogout';
 import '../../styles/professor/perfil.css';
 
@@ -32,11 +32,10 @@ export default function Perfil() {
   async function carregarPerfil() {
     setCarregando(true);
     try {
-      const api = await Api.post('/perfil', {
-        reason: 'loadPage',
-        emailUser: localStorage.getItem('emailUser'),
-        tipoUser: localStorage.getItem('tipoUsuario'),
-      });
+      const api = await PerfilService.carregar(
+        localStorage.getItem('emailUser'),
+        localStorage.getItem('tipoUsuario')
+      );
       if (!api) return;
 
       const dados = {
@@ -80,7 +79,6 @@ export default function Perfil() {
     }
 
     const dados = {
-      reason: 'update',
       emailUser: localStorage.getItem('emailUser'),
       tipoUser: localStorage.getItem('tipoUsuario'),
       nome: form.nomeUser,
@@ -90,7 +88,7 @@ export default function Perfil() {
     if (form.novaSenha) dados.senha = form.novaSenha;
 
     try {
-      const res = await Api.post('/perfil', dados);
+      const res = await PerfilService.atualizar(dados);
       if (res?.status === 'success') {
         localStorage.setItem('nomeUser', dados.nome);
         localStorage.setItem('emailUser', dados.email);
@@ -127,7 +125,7 @@ export default function Perfil() {
     formData.append('tipoUser', localStorage.getItem('tipoUsuario'));
 
     try {
-      const data = await Api.upload('/upload-foto', formData);
+      const data = await PerfilService.uploadFoto(formData);
       if (data?.status === 'sucesso') {
         localStorage.setItem('foto', data.foto);
         setFoto(data.foto);
