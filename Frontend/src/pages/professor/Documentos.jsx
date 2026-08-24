@@ -12,8 +12,13 @@ import { ProfessorDocumentosService } from '../../services/professorDocumentosSe
 import PopupLayer from '../../components/alunos/PopupLayer';
 import '../../styles/professor/lista.css';
 import '../../styles/professor/documentos.css';
+import check1 from '../../assets/icons/check.svg'
+import off1 from '../../assets/icons/off.svg'
+import eye1 from '../../assets/icons/eye.svg'
+import clock1 from '../../assets/icons/clock.svg'
+import iconFilter from '../../assets/icons/filter.svg'
 
-const STATUS_ICON = { Validado: 'check', Invalidado: 'off', Visualizado: 'eye', 'Não Avaliado': 'clock' };
+const STATUS_ICON = { Validado: {check1}, Invalidado: {off1}, Visualizado: {eye1}, 'Não Avaliado': {clock1} };
 const STATUS_OPCOES = [
   { id: 'VA', label: 'Validado', valor: 'Validado' },
   { id: 'IN', label: 'Invalidado', valor: 'Invalidado' },
@@ -110,7 +115,7 @@ export default function Documentos() {
         {/* Filtros */}
         <div className="container cl">
           <div className="topV rw g16">
-            <span className="icon filter"></span>
+            <img className="icon filter" src={iconFilter} alt="" />
             <p className="TopTxt">Filtrar Documentos</p>
           </div>
           <div className="rw p16">
@@ -153,7 +158,8 @@ export default function Documentos() {
               const largura = total ? (quant / total) * 100 : 0;
               return (
                 <div className="option-group rw g8" key={status}>
-                  <span className={`icon-list ${STATUS_ICON[status]}`}></span>
+
+                  <img className={`icon-list ${STATUS_ICON[status]}`} src={STATUS_ICON} alt="" />
                   <div className="mid cl">
                     <p>{status}</p>
                     <div className="progBar rw">
@@ -172,14 +178,14 @@ export default function Documentos() {
 
       {/* Lista */}
       <div className="g16 cl">
-        <table className="container topC">
+        <table className="container">
           <ColgroupDocumentos />
           <thead>
             <tr>
               <th><p>Nome do Documento</p></th>
               <th><p>Tipo</p></th>
               <th><p>Nome do Aluno</p></th>
-              <th><p>R.A. do Aluno</p></th>
+              <th><p>R.A</p></th>
               <th><p>Status</p></th>
               <th></th>
             </tr>

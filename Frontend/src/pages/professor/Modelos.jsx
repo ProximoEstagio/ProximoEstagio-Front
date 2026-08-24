@@ -36,7 +36,7 @@ export default function Modelos() {
       <div className="container topC">
         <p className="TopTxt">
           Elabore os modelos dos documentos necessários para a sua disciplina de estágio e
-          disponibilize-os aqui para que os alunos possam acessá-los
+          disponibilize-os aqui para que os alunos possam ace ssá-los
         </p>
       </div>
 
