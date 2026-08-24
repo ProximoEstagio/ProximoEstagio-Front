@@ -22,7 +22,7 @@ export default function PrazosPopup() {
       <div className="popup slim container">
         <div className="topV rw jc-sb">
           <p className="TopTxt">Prazos de Entrega</p>
-          <img className="icon closeW" onClick={fecharPrazosPopup} style={{ cursor: 'pointer' }} src={close} alt="" />
+          <img className="icon closeW" onClick={fecharPrazosPopup} style={{ cursor: 'pointer', backgroundColor:'white' }} src={close} alt="" />
         </div>
         <div className="cl p16 g16">
           {prazos.map((p) => {
