@@ -75,7 +75,7 @@ export default function NavProfessor() {
           <Link id="perfil" to="/professor/perfil" onClick={fecharMenu}>
             <div className="nav-perfil rw">
               <div id="perfil-info" className="cl">
-                <p id="nome" className="name">{nome}Henrique Mandri</p>
+                <p id="nome" className="name">{nome} Henrique Mandri</p>
                 <p id="email" className="email">{email}HenriqueMandri@gmail.com</p>
               </div>
               <img id="nav-foto" src={fotoSrc} alt="foto de perfil" className="foto-perfil" />

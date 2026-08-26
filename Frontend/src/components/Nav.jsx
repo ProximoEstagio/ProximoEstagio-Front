@@ -12,6 +12,7 @@ import { useDocumentos } from '../context/DocumentosContext';
 import { BASE_URL_STATIC } from '../services/api';
 import { useMenuMobile } from '../hooks/useMenuMobile';
 import { useTema } from '../hooks/useTema';
+import { useLogout } from '../hooks/useLogout';
 import AcessibilidadeMenu from './AcessibilidadeMenu';
 import logo from "../assets/imagens/logo.png";
 import fotoPerfil from "../assets/imagens/ft-perfil.png";
@@ -19,6 +20,7 @@ import sino from "../assets/icons/sino.png";
 import home from "../assets/icons/home.svg";
 import moon from "../assets/icons/moon.svg";
 import hamburguer from "../assets/icons/hamburguer.svg";
+import logout1 from '../assets/icons/logout.svg'
 import filetext from "../assets/icons/file-text.svg";
 import question from "../assets/icons/question.svg";
 import student from "../assets/icons/student.svg";
@@ -27,6 +29,7 @@ export default function Nav({ onAbrirInfo }) {
   const { notificacoes, abrirPrazosPopup } = useDocumentos();
   const { menuAberto, menuRef, toggleMenu, fecharMenu } = useMenuMobile();
   const { alternarTema } = useTema();
+  const logout = useLogout();
 
   const nome = localStorage.getItem('nomeUser') || '';
   const email = localStorage.getItem('emailUser') || '';
@@ -110,6 +113,7 @@ export default function Nav({ onAbrirInfo }) {
             </div>
           </Link>
           <img className="icon student" src={student} alt="" />
+          <img className="icon logout" src={logout1} onClick={logout} title="Sair" style={{cursor:"pointer",width:"25px",height:"25px"}} />
         </div>
       </div>
     </div>

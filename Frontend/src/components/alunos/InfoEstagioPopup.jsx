@@ -1,3 +1,4 @@
+// POPUP INFORMANDO OQ É O ESTAGIO
 import close from "../../assets/icons/close.svg";
 import file from "../../assets/icons/file.svg";
 

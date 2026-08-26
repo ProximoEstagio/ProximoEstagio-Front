@@ -9,6 +9,9 @@ import { BASE_URL_STATIC } from '../../services/api';
 import { PerfilService } from '../../services/perfilService';
 import { useLogout } from '../../hooks/useLogout';
 import '../../styles/professor/perfil.css';
+import fotoPerfil from '../../assets/imagens/ft-perfil.png'
+import pencil from '../../assets/icons/pencil.svg'
+import iconLogout from '../../assets/icons/logout.svg'
 
 export default function Perfil() {
   const logout = useLogout();
@@ -138,7 +141,7 @@ export default function Perfil() {
     }
   };
 
-  const fotoSrc = foto ? `${BASE_URL_STATIC}/storage/${foto}?t=${Date.now()}` : '/imagens/ft-perfil.png';
+  const fotoSrc = foto ? `${BASE_URL_STATIC}/storage/${foto}?t=${Date.now()}` : {fotoPerfil};
 
   return (
     <div className="content slim cl">
@@ -146,7 +149,7 @@ export default function Perfil() {
         <div className="topC rw jc-sb al-fs">
           <div style={{ position: 'relative', width: 100, height: 100 }}>
             <img
-              src={fotoSrc}
+              src={fotoPerfil}
               alt="foto de perfil"
               className="ft-perfil"
               style={{ cursor: 'pointer' }}
@@ -174,17 +177,18 @@ export default function Perfil() {
                 pointerEvents: 'none',
               }}
             >
-              <span className="icon pencil" style={{ width: 18, height: 18, backgroundSize: '80%' }}></span>
+              <img className="icon pencil" style={{ width: 18, height: 18, backgroundSize: '80%' }} src={pencil}  alt="" />
+
             </div>
           </div>
 
           <div className="cl">
             <p>Curso :</p>
-            <p id="curso">{perfil.curso}</p>
+            <p id="curso">{perfil.curso} GTI</p>
           </div>
 
           <button id="logout" className="btn-V fc" onClick={logout}>
-            <span className="icon logout"></span>
+            <img className="icon logout" src={iconLogout} alt="" />
             <p className="fs18">Sair</p>
           </button>
         </div>
@@ -209,7 +213,7 @@ export default function Perfil() {
                 <p className="fs18">{perfil.telefone}</p>
               </div>
               <button className="btn-C fc as-fe" onClick={iniciarEdicao}>
-                <span className="icon pencil"></span>
+                <img className="icon pencil" style={{ width: 18, height: 18, backgroundSize: '80%' }} src={pencil}  alt="" />
                 <p>Editar perfil</p>
               </button>
             </>

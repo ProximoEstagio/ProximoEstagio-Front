@@ -116,7 +116,7 @@ export default function Alunos() {
 
         {/* Filtro */}
         <div className="container cl">
-          <div className="topC rw g16">
+          <div className="topV rw g16">
             <img className="icon filter-C" src={filter} alt="" />
             <p className="TopTxt">Filtro de Alunos</p>
           </div>
@@ -170,12 +170,12 @@ export default function Alunos() {
 
       {/* Lista de Alunos */}
       <div className="g16 cl">
-        <table className="container topC">
+        <table className="container">
           <ColgroupAlunos />
           <thead>
             <tr>
               <th><p>Nome</p></th>
-              <th><p>R.A. do Aluno</p></th>
+              <th><p>R.A</p></th>
               <th>
                 <div className="rw jc-sa">
                   <p>A</p><p>B</p><p>C</p>
