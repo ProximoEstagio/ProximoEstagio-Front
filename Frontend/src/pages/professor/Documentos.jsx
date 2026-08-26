@@ -18,7 +18,7 @@ import eye1 from '../../assets/icons/eye.svg'
 import clock1 from '../../assets/icons/clock.svg'
 import iconFilter from '../../assets/icons/filter.svg'
 
-const STATUS_ICON = { Validado: {check1}, Invalidado: {off1}, Visualizado: {eye1}, 'Não Avaliado': {clock1} };
+const STATUS_ICON = { Validado: check1, Invalidado: off1, Visualizado: eye1, 'Não Avaliado': clock1 };
 const STATUS_OPCOES = [
   { id: 'VA', label: 'Validado', valor: 'Validado' },
   { id: 'IN', label: 'Invalidado', valor: 'Invalidado' },
@@ -159,7 +159,8 @@ export default function Documentos() {
               return (
                 <div className="option-group rw g8" key={status}>
 
-                  <img className={`icon-list ${STATUS_ICON[status]}`} src={STATUS_ICON} alt="" />
+                  
+                  <img className={`icon-list ${STATUS_ICON[status]}`} src={STATUS_ICON[status]} alt={status} />
                   <div className="mid cl">
                     <p>{status}</p>
                     <div className="progBar rw">
