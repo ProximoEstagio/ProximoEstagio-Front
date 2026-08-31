@@ -12,6 +12,7 @@ import '../../styles/professor/lista.css';
 import '../../styles/professor/alunos.css';
 import userplus from '../../assets/icons/user-plus.svg'
 import filter from '../../assets/icons/filter.svg'
+import closeW from '../../assets/icons/closeW.svg'
 
 const POR_PAGINA = 5;
 const STATUS_ICON = { Validado: 'check', Invalidado: 'off', Visualizado: 'eye', 'Não Avaliado': 'clock', empty: 'empty' };
@@ -305,10 +306,10 @@ function PopupCadastro({ aberto, nivel, professorId, cursos, onFechar, onCadastr
     <PopupLayer aberto={aberto} onFechar={onFechar} slim>
       <div className="topV rw jc-sb">
         <div className="rw g16">
-          <span className="icon user-plus"></span>
+          <img className="icon user-plus" src={userplus} alt="" />
           <p className="TopTxt">Cadastrar Aluno Manualmente</p>
         </div>
-        <span id="close-popup" className="icon closeW" onClick={onFechar} style={{ cursor: 'pointer' }}></span>
+        <img id="close-popup" className="icon closeW" onClick={onFechar} style={{ cursor: 'pointer' }} src={closeW} alt="" />
       </div>
       <div className="cl p16 g16 jc-sb">
         <div className="filter-inputs">

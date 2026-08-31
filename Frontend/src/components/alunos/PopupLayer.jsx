@@ -6,13 +6,15 @@
  * (popupCadastro.js, popupDocumento.js, popupModelo.js, admin.js).
  * Fecha ao clicar fora (no fundo) ou pelo botão de fechar interno.
  */
+
+import '../../styles/global.css'
 export default function PopupLayer({ aberto, onFechar, slim = false, children }) {
   if (!aberto) return null;
 
   return (
     <div
       id="popup-layer"
-      className="active"
+      className="popup-layer"
       onClick={(e) => {
         if (e.target.id === 'popup-layer') onFechar();
       }}

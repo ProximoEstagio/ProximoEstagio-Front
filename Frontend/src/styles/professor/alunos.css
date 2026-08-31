@@ -20,10 +20,27 @@
     background: var(--cinza-paleta);
     color: white;
 }
-<<<<<<< HEAD
-=======
 
-.topC{
-    width: 100%;
+.popup-layer {
+  position: fixed;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 999999;
+
+  background: rgba(0, 0, 0, 0.5);
 }
->>>>>>> f1e183ae18eccd675cee5d71dc929bd1bf71395f
+
+.popup-layer .popup {
+  position: relative;
+  z-index: 1000000;
+
+  max-height: 90vh;
+  overflow-y: auto;
+}
