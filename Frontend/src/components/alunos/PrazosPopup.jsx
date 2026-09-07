@@ -5,6 +5,7 @@
  */
 import { useDocumentos } from '../../context/DocumentosContext';
 import close from "../../assets/icons/close.svg";
+import '../../styles/global.css'
 
 export default function PrazosPopup() {
   const { prazos, prazosPopupAberto, fecharPrazosPopup } = useDocumentos();
